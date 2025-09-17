@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",  # langkah pertama
     "api",
+    "user",
+    "product",
+    "employee",
 ]
 
 MIDDLEWARE = [
@@ -73,10 +77,19 @@ WSGI_APPLICATION = "perusahaan.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# langkah kedua
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "test_django",
+        "USER": "root",  # ganti dengan user MySQL kamu
+        "PASSWORD": "",  # ganti password MySQL
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
     }
 }
 

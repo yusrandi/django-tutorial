@@ -1,0 +1,4 @@
+# langkah ketiga
+import pymysql
+
+pymysql.install_as_MySQLdb()
