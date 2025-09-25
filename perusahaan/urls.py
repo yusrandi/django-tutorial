@@ -23,6 +23,8 @@ from product.views import ProductView
 from employee.views import EmployeeView
 from rest_framework.routers import DefaultRouter
 
+from user.views import RegisterView, LoginView
+
 router = DefaultRouter()
 router.register(r"users", UserView, basename="user")
 router.register(r"products", ProductView, basename="product")
@@ -32,4 +34,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("hello/", my_view),
     path("api/", include(router.urls)),
+    path("register/", RegisterView.as_view(), name="register"),
+    path("login/", LoginView.as_view(), name="login"),
 ]

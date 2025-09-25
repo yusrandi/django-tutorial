@@ -4,6 +4,10 @@ from rest_framework import status
 from .models import User
 from .serializers import UserSerializer
 
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
 
 # Create your views here.
 class UserView(ViewSet):
@@ -120,3 +124,81 @@ class UserView(ViewSet):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+    # @api_view(["POST"])
+    # def register(self, request):
+    #     data = request.data
+    #     serializer = UserSerializer(data=data)
+    #     if serializer.is_valid():
+    #         user = User.objects.create_user(
+    #             email=data["email"], name=data["name"], password=data["password"]
+    #         )
+    #         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # @api_view(["POST"])
+    # def login(self, request):
+    #     email = request.data.get("email")
+    #     password = request.data.get("password")
+    #     user = authenticate(request, email=email, password=password)
+
+    #     if user is not None:
+    #         return Response(
+    #             {"message": "Login success", "user": UserSerializer(user).data}
+    #         )
+    #     else:
+    #         return Response(
+    #             {"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
+    #         )
+
+
+class RegisterView(APIView):
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.create_user(
+                name=serializer.validated_data["name"],
+                email=serializer.validated_data["email"],
+                password=serializer.validated_data["password"],
+            )
+
+            # ini adalah contoh membuat token jwt
+            refresh = RefreshToken.for_user(user)
+
+            return Response(
+                {
+                    "user": UserSerializer(user).data,
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(APIView):
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        # cek kredensial user
+        user = authenticate(request, email=email, password=password)
+
+        if not user:
+            return Response(
+                {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # buat token jwt
+        refresh = RefreshToken.for_user(user)
+
+        return Response(
+            {
+                "user": UserSerializer(user).data,
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            },
+            status=status.HTTP_200_OK,
+        )
