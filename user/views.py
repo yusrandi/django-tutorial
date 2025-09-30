@@ -8,9 +8,16 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.permissions import IsAdminUser
+
+from .permissions import IsAuthenticatedNonStaff
+
 
 # Create your views here.
 class UserView(ViewSet):
+    permission_classes = [IsAuthenticatedNonStaff]
+
     # GET /api/users/
     def list(self, request):
         users = User.objects.all()
@@ -26,6 +33,7 @@ class UserView(ViewSet):
 
     # POST /api/users/
     def create(self, request):
+
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -161,6 +169,8 @@ class RegisterView(APIView):
                 name=serializer.validated_data["name"],
                 email=serializer.validated_data["email"],
                 password=serializer.validated_data["password"],
+                is_active=serializer.validated_data.get("is_active", True),
+                is_staff=serializer.validated_data.get("is_staff", False),
             )
 
             # ini adalah contoh membuat token jwt

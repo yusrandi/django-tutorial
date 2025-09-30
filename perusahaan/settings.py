@@ -149,8 +149,8 @@ AUTH_USER_MODEL = "user.User"
 
 # langkah keempat konfigurasi simple jwt
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=365),  # Durasi token aktif
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=365),  # Durasi refresh token
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=30),  # Durasi token aktif
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),  # Durasi refresh token
     "USER_ID_FIELD": "id",  # Field yang digunakan sebagai user identifier
     "USER_ID_CLAIM": "id",  # Claim yang digunakan di token
     "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",  # Default token user class
