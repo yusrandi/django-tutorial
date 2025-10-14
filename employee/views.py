@@ -19,7 +19,6 @@ class EmployeeView(ViewSet):
     # POST
     def create(self, request):
         serializer = EmployeeSerializer(data=request.data)
-
         if serializer.is_valid():
             serializer.save()
             return Response({"status": "Berhasil"})

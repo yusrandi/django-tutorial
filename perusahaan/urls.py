@@ -24,6 +24,8 @@ from employee.views import EmployeeView
 from rest_framework.routers import DefaultRouter
 
 from user.views import RegisterView, LoginView
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register(r"users", UserView, basename="user")
@@ -37,3 +39,8 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
 ]
+
+# langkah ketiga untuk menampilkn file di browser
+# ⬇️ tambahkan ini di bawah
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
